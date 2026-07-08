@@ -1,5 +1,16 @@
 #![no_std]
-use soroban_sdk::{contract, contractimpl, contracttype, vec, Address, Env, Symbol, Val, Vec};
+use soroban_sdk::{contract, contractimpl, contracttype, contracterror, vec, Address, Env, Symbol, Val, Vec};
+
+#[contracterror]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord)]
+#[repr(u32)]
+pub enum Error {
+    NotAuthorized = 1,
+    AlreadyCompleted = 2,
+    OutOfBounds = 3,
+    InvalidAmount = 4,
+    AlreadyInitialized = 5,
+}
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -32,9 +43,9 @@ impl EscrowContract {
         arbiter_contract_id: Address,
         token_id: Address,
         milestones: Vec<Milestone>,
-    ) {
+    ) -> Result<(), Error> {
         if env.storage().instance().has(&DataKey::Funder) {
-            panic!("already initialized");
+            return Err(Error::AlreadyInitialized);
         }
 
         // Calculate total amount
@@ -42,7 +53,7 @@ impl EscrowContract {
         for i in 0..milestones.len() {
             let m = milestones.get(i).unwrap();
             if m.amount <= 0 {
-                panic!("milestone amount must be positive");
+                return Err(Error::InvalidAmount);
             }
             total_amount = total_amount.checked_add(m.amount).unwrap();
         }
@@ -55,12 +66,13 @@ impl EscrowContract {
         env.storage().instance().set(&DataKey::TotalAmount, &total_amount);
 
         // Lock funder's tokens by calling transfer on the token contract.
-        // The funder must approve this contract to spend their tokens beforehand.
         let token_client = soroban_sdk::token::Client::new(&env, &token_id);
         token_client.transfer(&funder, &env.current_contract_address(), &total_amount);
+
+        Ok(())
     }
 
-    pub fn release_milestone(env: Env, milestone_idx: u32) {
+    pub fn release_milestone(env: Env, milestone_idx: u32) -> Result<(), Error> {
         // Load configurations
         let funder: Address = env.storage().instance().get(&DataKey::Funder).unwrap();
         let provider: Address = env.storage().instance().get(&DataKey::Provider).unwrap();
@@ -78,18 +90,16 @@ impl EscrowContract {
 
         // Check bounds
         if milestone_idx >= milestones.len() {
-            panic!("milestone index out of bounds");
+            return Err(Error::OutOfBounds);
         }
 
         // Get milestone
         let mut milestone = milestones.get(milestone_idx).unwrap();
         if milestone.is_completed {
-            panic!("milestone already completed");
+            return Err(Error::AlreadyCompleted);
         }
 
         // Verify authorization from the arbiter contract
-        // Invoking: is_authorized(address: Address) -> bool
-        // We use Symbol::new since "is_authorized" is 13 chars (symbol_short supports <= 9 chars).
         let args: Vec<Val> = vec![&env, env.current_contract_address().to_val()];
         let is_auth: bool = env.invoke_contract(
             &arbiter_contract_id,
@@ -98,17 +108,19 @@ impl EscrowContract {
         );
 
         if !is_auth {
-            panic!("unauthorized: arbiter did not authorize release");
+            return Err(Error::NotAuthorized);
         }
 
         // Mark milestone as completed
         milestone.is_completed = true;
-        milestones = milestones.set(milestone_idx, milestone.clone());
+        milestones.set(milestone_idx, milestone.clone());
         env.storage().instance().set(&DataKey::Milestones, &milestones);
 
         // Transfer milestone amount from escrow contract to provider
         let token_client = soroban_sdk::token::Client::new(&env, &token_id);
         token_client.transfer(&env.current_contract_address(), &provider, &milestone.amount);
+
+        Ok(())
     }
 
     // Getters for frontend/verification
