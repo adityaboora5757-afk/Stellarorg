@@ -1,5 +1,11 @@
 "use client";
 
+/**
+ * Tranche Frontend Application
+ * Implements bulletproof exception workflows, explicit contract error handling,
+ * and live testnet polling + simulated sandbox modes.
+ */
+
 import React, { useState, useEffect } from "react";
 import { 
   Wallet, 
