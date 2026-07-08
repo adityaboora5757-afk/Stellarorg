@@ -1,0 +1,14 @@
+# Rust / Cargo
+/target
+
+# Node / Next.js
+/frontend/node_modules
+/frontend/.next
+/frontend/out
+/frontend/next-env.d.ts
+
+# Misc
+.DS_Store
+*.pem
+.env*
+.vercel
