@@ -5,10 +5,15 @@ members = [
     "contracts/escrow",
 ]
 
+[profile.dev]
+panic = "unwind"
+
+[profile.test]
+panic = "unwind"
+
 [profile.release]
 opt-level = "z"
 overflow-checks = true
 debug = false
-panic = "abort"
 lto = true
 codegen-units = 1
