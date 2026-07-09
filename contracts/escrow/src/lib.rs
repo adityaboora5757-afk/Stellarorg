@@ -69,6 +69,12 @@ impl EscrowContract {
         let token_client = soroban_sdk::token::Client::new(&env, &token_id);
         token_client.transfer(&funder, &env.current_contract_address(), &total_amount);
 
+        // Emit event: escrow initialized
+        env.events().publish(
+            (Symbol::new(&env, "escrow"), Symbol::new(&env, "initialized")),
+            total_amount,
+        );
+
         Ok(())
     }
 
@@ -119,6 +125,12 @@ impl EscrowContract {
         // Transfer milestone amount from escrow contract to provider
         let token_client = soroban_sdk::token::Client::new(&env, &token_id);
         token_client.transfer(&env.current_contract_address(), &provider, &milestone.amount);
+
+        // Emit event: milestone released
+        env.events().publish(
+            (Symbol::new(&env, "milestone"), Symbol::new(&env, "released")),
+            (milestone_idx, milestone.amount),
+        );
 
         Ok(())
     }
