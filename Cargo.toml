@@ -17,3 +17,7 @@ overflow-checks = true
 debug = false
 lto = true
 codegen-units = 1
+
+[patch.crates-io]
+ethnum = { path = "./patches/ethnum" }
+
