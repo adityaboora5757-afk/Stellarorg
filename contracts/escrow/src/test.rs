@@ -3,7 +3,8 @@ use super::{EscrowContract, EscrowContractClient, Milestone, Error};
 use soroban_sdk::{
     contract, contractimpl, vec, Address, Env, Symbol, Vec,
 };
-use soroban_sdk::testutils::Address as _;
+use soroban_sdk::testutils::{Address as _, Events};
+
 
 // Mock Arbiter contract for testing inter-contract call
 #[contract]
@@ -254,3 +255,31 @@ fn test_initialize_twice() {
     );
     assert!(res.is_err() || res.unwrap().is_err());
 }
+
+#[test]
+fn test_events_emitted() {
+    let env = Env::default();
+    let setup = setup_test(&env);
+
+    setup.escrow_client.initialize(
+        &setup.funder,
+        &setup.provider,
+        &setup.arbiter_id,
+        &setup.token_id,
+        &setup.milestones,
+    );
+
+    // Verify escrow/initialized event was emitted (events list is non-empty after initialize)
+    let events = env.events().all();
+    assert!(events.len() > 0, "no events emitted after initialize");
+
+    // Release a milestone and check event count increased
+    let events_before_release = env.events().all().len();
+    setup.escrow_client.release_milestone(&0);
+    let events_after_release = env.events().all().len();
+    assert!(
+        events_after_release > events_before_release,
+        "milestone/released event was not emitted"
+    );
+}
+
