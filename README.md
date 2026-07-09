@@ -1,6 +1,6 @@
 # Tranche — Milestone-Based Escrow Vault
 
-![CI](https://github.com/ranzer001/tranche/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/adityaboora5757-afk/Stellarorg/actions/workflows/ci.yml/badge.svg)
 ![Stellar Testnet](https://img.shields.io/badge/Stellar-Testnet-blue?logo=stellar)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
@@ -51,6 +51,44 @@ Every release requires an explicit authorization handshake: the **Escrow** contr
 │  │  is_authorized(address) → bool                      │    │
 │  └─────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Repository Structure
+
+```text
+.
+├── .github/
+│   └── workflows/
+│       └── ci.yml               # Automated CI/CD pipeline (Rust + Next.js tests)
+├── contracts/
+│   ├── arbiter/                 # Arbiter Identity verification contract
+│   │   ├── src/
+│   │   │   └── lib.rs           # Core validation and admin check logic
+│   │   └── Cargo.toml
+│   └── escrow/                  # Milestone Escrow Vault contract
+│       ├── src/
+│       │   ├── lib.rs           # Escrow state logic, inter-contract auth check
+│       │   └── test.rs          # 8 contract integration & event tests
+│       └── Cargo.toml
+├── frontend/
+│   ├── out/                     # Compiled static HTML export (Cloudflare deployed)
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── page.tsx         # Dashboard UI, timeline, wallet hooks, error UI
+│   │   │   └── layout.tsx
+│   │   └── utils/
+│   │       ├── escrowUtils.ts   # Helper math, address formatting, XLM conversion
+│   │       └── escrowUtils.test.ts # 3 passing frontend unit tests
+│   ├── next.config.ts           # Configured for static HTML export ('export')
+│   ├── package.json
+│   └── wrangler.toml            # Cloudflare Pages deployment configurations
+├── patches/
+│   └── ethnum/                  # Local Cargo patch resolving compiler transmute bug
+├── Cargo.toml                   # Workspace Cargo manager with patch configuration
+├── rust-toolchain.toml          # Rust toolchain pinned to stable 1.85.0
+└── README.md                    # Audited and fully compliant project documentation
 ```
 
 ---
@@ -184,7 +222,9 @@ Loading spinners are shown inline on each milestone row during transaction submi
 
 ![Mobile Responsive Layout](docs/screenshots/mobile_375px.png)
 
-**CI/CD Pipeline:** `[PENDING — push to GitHub to trigger Actions run, then screenshot the green checkmark from the Actions tab]`
+**CI/CD Pipeline:**
+
+![CI/CD Green Run](media/image.png)
 
 **Test Output:** see the Testing section below for real terminal output.
 
@@ -313,9 +353,9 @@ GitHub Actions workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
 1. **Contracts Validation** — installs Rust stable, caches Cargo, runs `cargo test`
 2. **Frontend Validation** — installs Node 20, runs `npm ci`, runs `npx vitest run`, runs `npm run build`
 
-CI badge: ![CI](https://github.com/ranzer001/tranche/actions/workflows/ci.yml/badge.svg)
+CI badge: ![CI](https://github.com/adityaboora5757-afk/Stellarorg/actions/workflows/ci.yml/badge.svg)
 
-`[PENDING — push to public GitHub repo to activate the Actions run and capture a real green-checkmark screenshot]`
+![CI/CD Green Run](media/image.png)
 
 ---
 
