@@ -4,7 +4,7 @@
 # Node / Next.js
 /frontend/node_modules
 /frontend/.next
-/frontend/out
+# /frontend/out — tracked for Cloudflare Pages static deployment
 /frontend/next-env.d.ts
 
 # Misc
