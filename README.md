@@ -6,7 +6,7 @@
 
 **Live Demo:** [stellarorg.adityaboora5757.workers.dev](https://stellarorg.adityaboora5757.workers.dev/)
 
-**Demo Video (1–2 min):** `[PENDING — must be recorded manually by the human owner and uploaded to YouTube/Loom]`
+**Demo Video (1–2 min):** [View Walkthrough Screencast (checked-in media file)](https://github.com/adityaboora5757-afk/Stellarorg/raw/main/media/Screen%20Recording%202026-07-10%20at%2012.12.22%E2%80%AFAM.mov)
 
 ---
 
@@ -218,9 +218,12 @@ Loading spinners are shown inline on each milestone row during transaction submi
 
 ![Desktop Dashboard](docs/screenshots/desktop_dashboard.png)
 
-**Mobile View (375px — iPhone SE)**
+**Mobile View (Real Device Layout)**
 
-![Mobile Responsive Layout](docs/screenshots/mobile_375px.png)
+<p align="center">
+  <img src="media/IMG_4487.png" width="360" alt="Mobile Dashboard View 1" />
+  <img src="media/IMG_4488.png" width="360" alt="Mobile Dashboard View 2" />
+</p>
 
 **CI/CD Pipeline:**
 
