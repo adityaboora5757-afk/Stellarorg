@@ -4,7 +4,7 @@
 ![Stellar Testnet](https://img.shields.io/badge/Stellar-Testnet-blue?logo=stellar)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-**Live Demo:** `[PENDING — INSERT DEPLOYED URL AFTER CLOUDFLARE PAGES BUILD]`
+**Live Demo:** [stellarorg.adityaboora5757.workers.dev](https://stellarorg.adityaboora5757.workers.dev/)
 
 **Demo Video (1–2 min):** `[PENDING — must be recorded manually by the human owner and uploaded to YouTube/Loom]`
 
